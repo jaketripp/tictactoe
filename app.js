@@ -84,6 +84,7 @@ function updateFontColor(){
 // ==============
 
 function decreaseTimer(){
+	handleBreakOrTimer();
 	killInterval = setInterval(function(){
 		timerRunning = true;
 		if (seconds === 0 && minutes === 0){
@@ -132,7 +133,29 @@ function bindEvents(){
 		} else {
 			decreaseTimer();
 		}
-	})
+	});
+
+	$('input').on('change', function(e){
+		// lengthOfPomodoro = $(this).val();
+		if ($(this).attr('name') === 'work'){
+			lengthOfPomodoro = $(this).val();
+			clearInterval(killInterval);
+			killInterval++;
+			decreaseTimer();
+			console.log('work time ' + lengthOfPomodoro);
+		}
+		if ($(this).attr('name') === 'break'){
+			lengthOfBreak = $(this).val();
+			clearInterval(killInterval);
+			killInterval++;
+			decreaseTimer();			
+			console.log('break time ' + lengthOfBreak);
+		}
+	});
+
+	$('input[name="break"]').on('change', function(e){
+
+	});
 }
 
 function updateDOM(){

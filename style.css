@@ -24,10 +24,16 @@ h2 {
 
 .ui.raised.segment {
 	border: 0.618rem solid black;
-	margin: 0 auto;
+	margin: 15px auto;
 	padding: 30px;
-	width: 80%;
 	max-width: 500px;
+	width: 80%;
+}
+
+.ui.form {
+	margin: 15px auto;
+	max-width: 500px;
+	width: 80%;
 }
 
 @media (min-width: 600px){

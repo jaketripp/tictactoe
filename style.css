@@ -60,8 +60,9 @@ input {
 	transition: color 2.0s;		
 }
 
-.ui.modal>.header {
+.ui.basic.modal>.header {
 	border: none;
+	padding: 1rem!important;
 }
 
 #paused {

@@ -15,22 +15,29 @@
 	<div class="ui container">
 		<h1>Pomodoro Clock</h1>
 		<div class="ui raised segment">
-			<h2>00:03</h2>
+			<h2>25:00</h2>
 			<h3>WORK TIME</h3>
 		</div>
 		<div class="ui form">
 			<div class="fields">
 				<div class="field">
 					<label>Work Minutes</label>
-					<input type="number" name="work" placeholder="25" min='1' step='1'>
+					<input type="number" name="work" placeholder="25" min="1" step="1">
 				</div>
 				<div class="field">
 					<label>Break Minutes</label>
-					<input type="number" name="break" placeholder="5">
+					<input type="number" name="break" placeholder="5" min="1" step="1">
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<div class="ui modal">
+		<div class="header" id="paused">PAUSED</div>
+	</div>
+
+	<audio id="timeForBreak" src="sounds/pinwheel.mp3" volume="0.05"></audio>
+	<audio id="timeForWork" src="sounds/prism-2.mp3" volume="0.05"></audio>
 
 <script type="text/javascript" src="app.js"></script>
 

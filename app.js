@@ -5,7 +5,7 @@
 var lengthOfPomodoro = 25;
 var lengthOfBreak = 5;
 var millisecondsPom = 1000 * 60 * lengthOfPomodoro;
-var timerCount = 2;
+var timerCount = 1;
 
 var arr = $('h2').text();
 arr = arr.split(':');
@@ -13,52 +13,15 @@ var minutes = parseInt(arr[0]);
 var seconds = parseInt(arr[1]);
 
 var killInterval;
-var timerRunning = true;
+var isTimerRunning = true;
 
 
 // ===================
 // AUXILIARY FUNCTIONS
 // ===================
 
-function pluralize(count, word) {
-    return count === 1 ? count + ' ' + word : count + ' ' + word + 's';
-}
-
 function minTwoDigits(n) {
   return (n < 10 ? '0' : '') + n;
-}
-
-// converts hours to simplified time (1 year, 3 months, 2 weeks, 1 day, 9 hours) and appends string
-function formatTime(seconds) {
-    var value = seconds;
-
-    var units = {
-        "year": 24*365*60*60,
-        "month": 24*30*60*60,
-        "week": 24*7*60*60,
-        "day": 24*60*60,
-        "hour": 60*60,
-        "minute": 60,
-        "second": 1
-    }
-
-    var result = [];
-
-    for(var name in units) {
-        var p =  Math.floor(value/units[name]);
-        if (p > 0) {
-            result.push(p);
-        }
-        value %= units[name];
-    }
-
-    var str = result[0];
-
-    for (var i = 1; i < result.length; i++) {
-        str += (':' + result[i]);
-    }
-
-    return str;
 }
 
 // [min,max]
@@ -68,25 +31,14 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function updateFontColor(){
-    var r = getRandomInt(0,200);
-    var g = getRandomInt(0,200);
-    var b = getRandomInt(0,200);
-    var rgb = 'rgb(' + r + ',' + g + ',' + b + ')';
-    $('h1').css('color', rgb);
-    $('h2').css('color', rgb);
-    $('h3').css('color', rgb);
-    $('.ui.raised.segment').css('borderColor', rgb);
-}
 
 // ==============
 // MAIN FUNCTIONS
 // ==============
 
 function decreaseTimer(){
-	handleBreakOrTimer();
 	killInterval = setInterval(function(){
-		timerRunning = true;
+		isTimerRunning = true;
 		if (seconds === 0 && minutes === 0){
 			timerCount++;
 			handleBreakOrTimer();
@@ -114,22 +66,42 @@ function isTimeForBreak(){
 
 function handleBreakOrTimer(){
 	if (isTimeForBreak()){
-		console.log('time for break')
+		if (minutes === 0 && seconds === 0){
+			$('#timeForBreak')[0].play();
+		}
 		minutes = lengthOfBreak;
 		$('h3').text('BREAK TIME');
 	} else {
-		console.log('time for work')
+		if (minutes === 0 && seconds === 0){
+			$('#timeForWork')[0].play();
+		}
 		minutes = lengthOfPomodoro;
 		$('h3').text('WORK TIME');
 	}
 	seconds = 0;
 }
 
+function showModal(){
+	$('.ui.modal')
+	  .modal({
+        onHidden: function(){
+        	setTimeout(function(){
+        		decreaseTimer();
+        	}, 0);
+        },
+        blurring: true,
+	    inverted: true,
+	  })
+	  .modal('show')
+	;
+}
+
 function bindEvents(){
 	$('.ui.raised.segment').on('click', function(){
-		if (timerRunning){
+		if (isTimerRunning){
 			clearInterval(killInterval);
-			timerRunning = false;
+			isTimerRunning = false;
+			showModal();
 		} else {
 			decreaseTimer();
 		}
@@ -139,31 +111,37 @@ function bindEvents(){
 		// lengthOfPomodoro = $(this).val();
 		if ($(this).attr('name') === 'work'){
 			lengthOfPomodoro = $(this).val();
-			clearInterval(killInterval);
-			killInterval++;
-			decreaseTimer();
-			console.log('work time ' + lengthOfPomodoro);
+			onUpdateTimes();
 		}
 		if ($(this).attr('name') === 'break'){
 			lengthOfBreak = $(this).val();
-			clearInterval(killInterval);
-			killInterval++;
-			decreaseTimer();			
-			console.log('break time ' + lengthOfBreak);
+			onUpdateTimes();			
 		}
-	});
-
-	$('input[name="break"]').on('change', function(e){
-
 	});
 }
 
-function updateDOM(){
+function onUpdateTimes(){
+	clearInterval(killInterval);
+	killInterval++;
+	handleBreakOrTimer();
 	decreaseTimer();
 }
 
+function updateFontColor(){
+    var r = getRandomInt(0,200);
+    var g = getRandomInt(0,200);
+    var b = getRandomInt(0,200);
+    var rgb = 'rgb(' + r + ',' + g + ',' + b + ')';
+    $('h1').css('color', rgb);
+    $('h2').css('color', rgb);
+    $('h3').css('color', rgb);
+    $('.ui.raised.segment').css('borderColor', rgb);
+}
+
 function init(){
-	updateDOM();
+	handleBreakOrTimer();
+	updateFontColor();
+	decreaseTimer();
 	bindEvents();
 }
 
@@ -180,16 +158,17 @@ init();
 // change to a random color (steal from as of today) every such period of time
 // every minute? every 10 seconds? every 5 seconds?
 
-
-
-
-// User Story: I can customize the length of each pomodoro.
-
-// after the timer goes to zero, play a sound, start the 5 break
-
 // change the time from 25 minutes to whatever
 // use a global variable to store it
 // use an input type number to change it
 // have event onChange to update the variable
+
+// User Story: I can customize the length of each pomodoro.
+// have a thing pop up and blur the background so you know that it's paused
+
+
+
+// after the timer goes to zero, play a sound, start the 5 break
+
 
 

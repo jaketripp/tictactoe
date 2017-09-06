@@ -4,6 +4,11 @@
 
 var userSymbol;
 
+var whoGoesFirstKey = {
+	1: 'User',
+	2: 'Computer'
+}
+
 // ===================
 // AUXILIARY FUNCTIONS
 // ===================
@@ -20,7 +25,12 @@ function getRandomInt(min, max) {
 // MAIN FUNCTIONS
 // ==============
 
-function modal(){
+function doesUserGoFirst(){
+	var random = getRandomInt(1,2);
+	return whoGoesFirstKey[random] === 'User';
+}
+
+function displayModalAndSetUserSymbol(){
 	$('.ui.basic.modal')
 	  .modal({
 	  	onApprove: function(){
@@ -38,7 +48,14 @@ function modal(){
 	;
 }
 
-modal();
+function clickBoxToMark(){
+	$('td').text('O');
+	$('td').on('click', function(e){
+		$(this).text(userSymbol);
+		$(this).addClass(userSymbol);
+	});
+}
+
 
 function updateFontColor(){
     var r = getRandomInt(0,200);
@@ -55,9 +72,22 @@ function updateFontColor(){
 }
 
 function init(){
-	
+	displayModalAndSetUserSymbol();
+	clickBoxToMark();
 }
 
 init();
 
-// 
+// randomly decide who goes first
+// have modal that user can click to choose x or o
+
+// make a way to represent the board so that you can figure out a way for the computer to pick the right option
+
+// computer needs to know when game is over
+
+// computer needs to know whether it lost, it won, or a draw
+
+// computer needs to wait for user to act
+
+// depending on user symbol, mark each clicked box with user's symbol
+

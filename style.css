@@ -34,7 +34,9 @@ tbody {
 
 td {
 	padding: 4.236rem;
+	font-size: 4.236rem;
 	border: 1px solid black;
+	color: white;
 }
 
 .ui.modal>.actions, .ui.modal>.header {
@@ -42,8 +44,20 @@ td {
 	text-align: center;
 }
 
+.ui.modal>.header {
+	font-size: 4.236rem;
+}
+
 .actions .button {
 	font-size: 4.236rem;
+}
+
+td.O {
+	color: #22be34;
+}
+
+td.X {
+	color: #54C8FF;
 }
 /*
 * { background-color: rgba(255,0,0,0.3);}

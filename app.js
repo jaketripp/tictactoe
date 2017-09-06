@@ -22,17 +22,14 @@ function getRandomInt(min, max) {
 function showModal(){
 	$('.ui.basic.modal')
 	  .modal({
-        onHidden: function(){
-        	setTimeout(function(){
-        		decreaseTimer();
-        	}, 0);
-        },
         blurring: true,
 	    inverted: true,
 	  })
 	  .modal('show')
 	;
 }
+
+showModal();
 
 function updateFontColor(){
     var r = getRandomInt(0,200);

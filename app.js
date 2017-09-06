@@ -2,6 +2,7 @@
 // VARIABLES
 // =========
 
+var userSymbol;
 
 // ===================
 // AUXILIARY FUNCTIONS
@@ -19,9 +20,17 @@ function getRandomInt(min, max) {
 // MAIN FUNCTIONS
 // ==============
 
-function showModal(){
+function modal(){
 	$('.ui.basic.modal')
 	  .modal({
+	  	onApprove: function(){
+	  		userSymbol = 'O';
+	  		console.log('user is ' + userSymbol);
+	  	},
+	  	onDeny: function(){
+	  		userSymbol = 'X';
+	  		console.log('user is ' + userSymbol);
+	  	},
         blurring: true,
 	    inverted: true,
 	  })
@@ -29,7 +38,7 @@ function showModal(){
 	;
 }
 
-showModal();
+modal();
 
 function updateFontColor(){
     var r = getRandomInt(0,200);
@@ -51,3 +60,4 @@ function init(){
 
 init();
 
+// 

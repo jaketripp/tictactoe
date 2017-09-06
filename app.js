@@ -4,7 +4,6 @@
 
 var lengthOfPomodoro = 25;
 var lengthOfBreak = 5;
-var millisecondsPom = 1000 * 60 * lengthOfPomodoro;
 var timerCount = 1;
 
 var arr = $('h2').text();
@@ -44,8 +43,8 @@ function decreaseTimer(){
 			handleBreakOrTimer();
 		}
 		if (seconds === 0 && minutes !== 0){
-			minutes--;
 			updateFontColor();
+			minutes--;
 			seconds = 60;
 		}
 		seconds--;
@@ -82,7 +81,7 @@ function handleBreakOrTimer(){
 }
 
 function showModal(){
-	$('.ui.modal')
+	$('.ui.basic.modal')
 	  .modal({
         onHidden: function(){
         	setTimeout(function(){
@@ -108,7 +107,6 @@ function bindEvents(){
 	});
 
 	$('input').on('change', function(e){
-		// lengthOfPomodoro = $(this).val();
 		if ($(this).attr('name') === 'work'){
 			lengthOfPomodoro = $(this).val();
 			onUpdateTimes();
@@ -135,12 +133,14 @@ function updateFontColor(){
     $('h1').css('color', rgb);
     $('h2').css('color', rgb);
     $('h3').css('color', rgb);
+    $('label').css('color', rgb);
+    $('input').css('color', rgb);
+    $('#paused').css('color', rgb);
     $('.ui.raised.segment').css('borderColor', rgb);
 }
 
 function init(){
 	handleBreakOrTimer();
-	updateFontColor();
 	decreaseTimer();
 	bindEvents();
 }

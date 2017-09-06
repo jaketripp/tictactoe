@@ -15,15 +15,18 @@ body {
 
 h1 {
 	font-size: 2.618rem;
+	transition: color 2.0s;
 }
 
 h2 {
 	font-size: 2.618rem;
 	text-align: center;
+	transition: color 2.0s;
 }
 
 h3, .ui.form .field>label, .ui.form input[type="number"] {
 	font-size: 1rem;
+	transition: color 2.0s;
 }
 
 .ui.form input[type="number"] {
@@ -31,11 +34,12 @@ h3, .ui.form .field>label, .ui.form input[type="number"] {
 }
 
 .ui.raised.segment {
-	border: 0.618rem solid black;
+	border: 0.382rem solid black;
 	margin: 15px auto;
 	padding: 30px;
 	max-width: 500px;
 	width: 80%;
+	transition: border-color 2.0s;
 }
 
 .ui.form {
@@ -48,15 +52,23 @@ div.field {
 	width: 50%;
 }
 
-.ui.modal {
+label {
+	transition: color 2.0s;	
+}
+
+input {
+	transition: color 2.0s;		
+}
+
+.ui.modal>.header {
 	border: none;
 }
 
 #paused {
-	color: #777;
 	font-size: 4.236rem;
 	text-align: center;
 }
+
 
 @media (min-width: 600px){
 	html {

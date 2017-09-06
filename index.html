@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Pomodoro Clock</title>
+	<title>Tic Tac Toe</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -9,35 +9,33 @@
 	<link rel="stylesheet" type="text/css" href="lib/semantic/semantic.min.css">
 	<script src="lib/semantic/semantic.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css">
+
 </head>
 <body>
 
 	<div class="ui container">
-		<h1>Pomodoro Clock</h1>
-		<div class="ui raised segment">
-			<h2>25:00</h2>
-			<h3>WORK TIME</h3>
-		</div>
-		<div class="ui form">
-			<div class="fields">
-				<div class="field">
-					<label>Work Minutes</label>
-					<input type="number" name="work" value="25" min="1" step="1">
-				</div>
-				<div class="field">
-					<label>Break Minutes</label>
-					<input type="number" name="break" value="5" min="1" step="1">
-				</div>
-			</div>
-		</div>
+		<h1>Tic Tac Toe</h1>
+		<table>
+			<tbody>
+				<tr>
+					<td>1</td>
+					<td>2</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<td>4</td>
+					<td>5</td>
+					<td>6</td>
+				</tr>
+				<tr>
+					<td>7</td>
+					<td>8</td>
+					<td>9</td>
+				</tr>
+			 
+			</tbody>
+		</table>
 	</div>
-
-	<div class="ui basic modal">
-		<div class="header" id="paused">PAUSED</div>
-	</div>
-
-	<audio id="timeForBreak" src="sounds/pinwheel.mp3" volume="0.05"></audio>
-	<audio id="timeForWork" src="sounds/prism-2.mp3" volume="0.05"></audio>
 
 <script type="text/javascript" src="app.js"></script>
 

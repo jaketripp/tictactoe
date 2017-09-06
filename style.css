@@ -24,54 +24,26 @@ h2 {
 	transition: color 2.0s;
 }
 
-h3, .ui.form .field>label, .ui.form input[type="number"] {
-	font-size: 1rem;
-	transition: color 2.0s;
+table {
+	margin: 10px auto;
 }
 
-.ui.form input[type="number"] {
-	width: 100%;
+tbody {
+	border: 1px solid black;
 }
 
-.ui.raised.segment {
-	border: 0.382rem solid black;
-	margin: 15px auto;
-	padding: 30px;
-	max-width: 500px;
-	width: 80%;
-	transition: border-color 2.0s;
+td {
+	padding: 4.236rem;
+	border: 1px solid black;
 }
 
-.ui.form {
-	margin: 30px auto;
-	max-width: 500px;
-	width: 80%;
-}
+* { background-color: rgba(255,0,0,0.3);}
+* * { background-color: rgba(0,255,0,0.3);}
+* * * { background-color: rgba(0,0,255,0.3);}
+* * * * { background-color: rgba(255,0,0,0.3);}
+* * * * * { background-color: rgba(0,255,0,0.3);}
 
-div.field {
-	width: 50%;
-}
-
-label {
-	transition: color 2.0s;	
-}
-
-input {
-	transition: color 2.0s;		
-}
-
-.ui.basic.modal>.header {
-	border: none;
-	padding: 1rem!important;
-}
-
-#paused {
-	font-size: 4.236rem;
-	text-align: center;
-}
-
-
-@media (min-width: 600px){
+/*@media (min-width: 600px){
 	html {
 		font-size: 16px;
 	}
@@ -89,3 +61,4 @@ input {
 	}
 }
  
+*/

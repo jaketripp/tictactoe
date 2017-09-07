@@ -17,9 +17,9 @@ var result = 'TIE!';
 
 // [min,max]
 function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 
@@ -36,22 +36,44 @@ function doesUserGoFirst(){
 	return whoGoesFirstKey[random] === 'User';
 }
 
-function displayModalAndSetUserSymbol(){
-	$('.ui.basic.modal')
-	  .modal({
-	  	onApprove: function(){
-	  		userSymbol = 'O';
-	  		computerSymbol = 'X';
-	  	},
-	  	onDeny: function(){
-	  		userSymbol = 'X';
-	  		computerSymbol = 'O';
-	  	},
-        blurring: true,
-	    inverted: true,
-	  })
-	  .modal('show')
-	;
+function setUserSymbol(){
+	$('#setSymbol')
+		.modal({
+			blurring: true,
+			inverted: true,
+			onApprove: function(){
+				userSymbol = 'O';
+				computerSymbol = 'X';
+			},
+			onDeny: function(){
+				userSymbol = 'X';
+				computerSymbol = 'O';
+			}        
+		})
+		.modal('show');
+}
+
+function resultModal(){
+	$('#result .header').text(result);
+	$('#result')
+		.modal({
+			inverted: true,
+			blurring: true,
+			onHidden: function(){
+				reset();
+				setUserSymbol();
+			}		
+		})
+	.modal('show')
+}
+
+function reset(){
+	indicesOfXs = [];
+	indicesOfOs = [];
+	emptyIndices = [1,2,3,4,5,6,7,8,9];
+	result = 'TIE!';
+	$('td').text('');
+	$('td').removeClass();
 }
 
 function clickBoxToMark(){
@@ -124,11 +146,11 @@ function sameSymbolInWinningCombo(){
 		}
 
 		if (Xcount === 3){
-			result = 'X wins';
+			result = 'X wins!';
 			return true;
 		}
 		if (Ocount === 3){
-			result = 'O wins';
+			result = 'O wins!';
 			return true;
 		}
 	}
@@ -151,21 +173,31 @@ function indexToBlockType(index){
 	}
 }
 
-// returns true if all blocks filled or if the same symbol has been used in a winning combo
 function isGameOver(){
 	return allBlocksFilled() || sameSymbolInWinningCombo();
 }
 
 function displayGameOver(){
 	if (isGameOver()){
-		setTimeout(function(){
-			alert(result);
-		}, 300)
+		resultModal();
+		$('#result').modal('show');
 	}
 }
 
+// just to speed up dev process
+function tempToggleSymbol(){
+	$('#toggle').on('click', function(){
+		if (userSymbol === 'X'){
+			userSymbol = 'O';
+		} else {
+			userSymbol = 'X'
+		}
+	});
+}
+
 function init(){
-	displayModalAndSetUserSymbol();
+	tempToggleSymbol()
+	setUserSymbol();
 	clickBoxToMark();
 }
 
@@ -197,10 +229,6 @@ init();
 // then do computer going first
 // then do random going first
 
-// have an array in order of numbers by best move.
-// iterate through it.
-// if number is already used, go to the next one?
-
 // have a bunch of if statements
 
 // computer chooses a corner
@@ -208,3 +236,9 @@ init();
 // if I choose edge ...
 // if I choose corner ...
 
+
+
+
+// have an array in order of numbers by best move.
+// iterate through it.
+// if number is already used, go to the next one?

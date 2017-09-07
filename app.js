@@ -7,11 +7,9 @@ var computerSymbol;
 
 var indicesOfXs = [];
 var indicesOfOs = [];
+var emptyIndices = [1,2,3,4,5,6,7,8,9];
 
-var whoGoesFirstKey = {
-	1: 'User',
-	2: 'Computer'
-}
+var result = 'TIE!';
 
 // ===================
 // AUXILIARY FUNCTIONS
@@ -30,6 +28,10 @@ function getRandomInt(min, max) {
 // ==============
 
 function doesUserGoFirst(){
+	var whoGoesFirstKey = {
+		1: 'User',
+		2: 'Computer'
+	}
 	var random = getRandomInt(1,2);
 	return whoGoesFirstKey[random] === 'User';
 }
@@ -67,22 +69,7 @@ function clickBoxToMark(){
 	});
 }
 
-
-function updateFontColor(){
-    var r = getRandomInt(0,200);
-    var g = getRandomInt(0,200);
-    var b = getRandomInt(0,200);
-    var rgb = 'rgb(' + r + ',' + g + ',' + b + ')';
-    $('h1').css('color', rgb);
-    $('h2').css('color', rgb);
-    $('h3').css('color', rgb);
-    $('label').css('color', rgb);
-    $('input').css('color', rgb);
-    $('#paused').css('color', rgb);
-    $('.ui.raised.segment').css('borderColor', rgb);
-}
-
-function checkIfAllBlocksFilled(){
+function allBlocksFilled(){
 	for (var i = 1; i <= 9; i++){
 		if ($('[data-num="' + i + '"]').text() === ''){
 			return false;
@@ -94,7 +81,12 @@ function checkIfAllBlocksFilled(){
 // takes in a number and a symbol
 // if symbol is 'X', appends number to indicesOfXs
 // else if symbol is 'O', appends number to indicesOfOs
+// removes index from emptyIndices
 function updateArraysOfSymbols(symbol, index){
+
+	var position = emptyIndices.indexOf(index);
+	emptyIndices.splice(position, 1)
+
 	if (symbol === 'X') {
 		indicesOfXs.push(index);
 	}
@@ -106,11 +98,13 @@ function updateArraysOfSymbols(symbol, index){
 	console.log(indicesOfXs);
 	console.log('o array');
 	console.log(indicesOfOs);
+	console.log('empty spaces array');
+	console.log(emptyIndices);
 
 }
 
 
-function sameSymbolInWinningCombo(symbol){
+function sameSymbolInWinningCombo(){
 
 	var winningCombos = [[1,2,3],[4,5,6],[7,8,9],[1,4,7],[2,5,8],[3,6,9],[1,5,9],[3,5,7]];
 
@@ -130,12 +124,12 @@ function sameSymbolInWinningCombo(symbol){
 		}
 
 		if (Xcount === 3){
-			// make a function here that takes in 'X' and makes another modal
-			alert('x wins');
+			result = 'X wins';
+			return true;
 		}
 		if (Ocount === 3){
-			// use it again here
-			alert('o wins');
+			result = 'O wins';
+			return true;
 		}
 	}
 	return false;
@@ -157,19 +151,16 @@ function indexToBlockType(index){
 	}
 }
 
-
-
+// returns true if all blocks filled or if the same symbol has been used in a winning combo
 function isGameOver(){
-
-	checkIfAllBlocksFilled();
-	
-	sameSymbolInWinningCombo();
-	
+	return allBlocksFilled() || sameSymbolInWinningCombo();
 }
 
 function displayGameOver(){
 	if (isGameOver()){
-		console.log('gameover')
+		setTimeout(function(){
+			alert(result);
+		}, 300)
 	}
 }
 
@@ -191,20 +182,20 @@ init();
 // [[1,2,3],[4,5,6],[7,8,9],[1,4,7],[2,5,8],[3,6,9],[1,5,9],[3,5,7]]
 // check if all the boxes are filled
 
-// as i click boxes, append to an array, userArray
-// have a computerArray too?
+// have an array of currently vacant squares
+
+// as i click boxes, append to an array
+
+// computer needs to know whether it lost, it won, or a draw
+
+// as you add xs and os to their respective arrays, remove the index from the total array
+// use the total array for considering positions
+
 
 // randomly decide who goes first
 // but start with user going first
 // then do computer going first
 // then do random going first
-
-
-// computer needs to know whether it lost, it won, or a draw
-
-
-
-
 
 // have an array in order of numbers by best move.
 // iterate through it.
@@ -217,4 +208,3 @@ init();
 // if I choose edge ...
 // if I choose corner ...
 
-// have a function that makes sure to only consider vacant squares

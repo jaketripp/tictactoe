@@ -1,5 +1,5 @@
 html {
-	font-size: 14px;
+	font-size:10px;
 }
 
 body {
@@ -14,29 +14,27 @@ body {
 }
 
 h1 {
-	font-size: 2.618rem;
-	transition: color 2.0s;
-}
-
-h2 {
-	font-size: 2.618rem;
-	text-align: center;
+	font-size: 4.236rem;
 	transition: color 2.0s;
 }
 
 table {
 	margin: 10px auto;
+	width: 30vw;
+	height: 30vw;
 }
 
 tbody {
-	border: 1px solid black;
+	border: 1px solid black;	
 }
 
 td {
-	padding: 4.236rem;
+	padding: 2.618rem;
 	font-size: 4.236rem;
 	border: 1px solid black;
 	color: white;
+	width: 33%;
+	height: 33%;
 }
 
 .ui.modal>.actions, .ui.modal>.header {
@@ -59,6 +57,7 @@ td.O {
 td.X {
 	color: #54C8FF;
 }
+
 /*
 * { background-color: rgba(255,0,0,0.3);}
 * * { background-color: rgba(0,255,0,0.3);}
@@ -66,22 +65,22 @@ td.X {
 * * * * { background-color: rgba(255,0,0,0.3);}
 * * * * * { background-color: rgba(0,255,0,0.3);}
 */
-/*@media (min-width: 600px){
+
+@media (min-width: 600px){
 	html {
-		font-size: 16px;
+		font-size: 12px;
 	}
 }
 
 @media (min-width: 800px){
 	html {
-		font-size: 18px;
+		font-size: 13px;
 	}
 }
 
 @media (min-width: 1000px){
 	html {
-		font-size: 20px;
+		font-size: 14px;
 	}
 }
  
-*/

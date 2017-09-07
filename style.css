@@ -29,10 +29,9 @@ tbody {
 }
 
 td {
-	padding: 2.618rem;
+	padding: 1.618rem;
 	font-size: 4.236rem;
 	border: 1px solid black;
-	color: white;
 	width: 33%;
 	height: 33%;
 }

@@ -49,7 +49,7 @@ function displayModalAndSetUserSymbol(){
 }
 
 function clickBoxToMark(){
-	$('td').text('');
+	// $('td').text('');
 	$('td').on('click', function(e){
 		$(this).text(userSymbol);
 		$(this).addClass(userSymbol);

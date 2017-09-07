@@ -20,8 +20,8 @@ h1 {
 
 table {
 	margin: 10px auto;
-	width: 30vw;
-	height: 30vw;
+	width: 90vw;
+	height: 90vw;
 }
 
 tbody {
@@ -70,17 +70,29 @@ td.X {
 	html {
 		font-size: 12px;
 	}
+	table {
+		width: 75vw;
+		height: 75vw;
+	}
 }
 
 @media (min-width: 800px){
 	html {
 		font-size: 13px;
 	}
+	table {
+		width: 50vw;
+		height: 50vw;
+	}
 }
 
 @media (min-width: 1000px){
 	html {
 		font-size: 14px;
+	}
+	table {
+		width: 30vw;
+		height: 30vw;
 	}
 }
  

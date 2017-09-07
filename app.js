@@ -3,6 +3,10 @@
 // =========
 
 var userSymbol;
+var computerSymbol;
+
+var indicesOfXs = [];
+var indicesOfOs = [];
 
 var whoGoesFirstKey = {
 	1: 'User',
@@ -35,11 +39,11 @@ function displayModalAndSetUserSymbol(){
 	  .modal({
 	  	onApprove: function(){
 	  		userSymbol = 'O';
-	  		console.log('user is ' + userSymbol);
+	  		computerSymbol = 'X';
 	  	},
 	  	onDeny: function(){
 	  		userSymbol = 'X';
-	  		console.log('user is ' + userSymbol);
+	  		computerSymbol = 'O';
 	  	},
         blurring: true,
 	    inverted: true,
@@ -49,10 +53,17 @@ function displayModalAndSetUserSymbol(){
 }
 
 function clickBoxToMark(){
-	// $('td').text('');
 	$('td').on('click', function(e){
 		$(this).text(userSymbol);
 		$(this).addClass(userSymbol);
+
+		// 'X' or 'O'
+		var symbol = e.target.innerText;
+		// index of block (1-9)
+		var index = parseInt(e.target.dataset.num);
+		updateArraysOfSymbols(symbol, index);
+
+		displayGameOver();
 	});
 }
 
@@ -71,6 +82,97 @@ function updateFontColor(){
     $('.ui.raised.segment').css('borderColor', rgb);
 }
 
+function checkIfAllBlocksFilled(){
+	for (var i = 1; i <= 9; i++){
+		if ($('[data-num="' + i + '"]').text() === ''){
+			return false;
+		}
+	}
+	return true;
+}
+
+// takes in a number and a symbol
+// if symbol is 'X', appends number to indicesOfXs
+// else if symbol is 'O', appends number to indicesOfOs
+function updateArraysOfSymbols(symbol, index){
+	if (symbol === 'X') {
+		indicesOfXs.push(index);
+	}
+	if (symbol === 'O') {
+		indicesOfOs.push(index);
+	}
+
+	console.log('x array');
+	console.log(indicesOfXs);
+	console.log('o array');
+	console.log(indicesOfOs);
+
+}
+
+
+function sameSymbolInWinningCombo(symbol){
+
+	var winningCombos = [[1,2,3],[4,5,6],[7,8,9],[1,4,7],[2,5,8],[3,6,9],[1,5,9],[3,5,7]];
+
+	for (var i = 0; i < winningCombos.length; i++){
+		
+		var Xcount = 0;
+		var Ocount = 0;
+
+		for (var j = 0; j < winningCombos[i].length; j++){
+			// if the other two symbols in the array are the same, return true
+			if (indicesOfXs.indexOf(winningCombos[i][j]) !== -1){
+				Xcount++;
+			}
+			if (indicesOfOs.indexOf(winningCombos[i][j]) !== -1){
+				Ocount++;
+			}
+		}
+
+		if (Xcount === 3){
+			// make a function here that takes in 'X' and makes another modal
+			alert('x wins');
+		}
+		if (Ocount === 3){
+			// use it again here
+			alert('o wins');
+		}
+	}
+	return false;
+}
+
+// takes in index, returns block type (edge, corner, or corner)
+
+// utilize that function to make the if statements more concise
+
+// if move() === 'edge' ... etc
+
+function indexToBlockType(index){
+	if (index % 2 === 0) {
+		return 'edge';
+	} else if (index === 5) {
+		return 'center';
+	} else {
+		return 'corner';
+	}
+}
+
+
+
+function isGameOver(){
+
+	checkIfAllBlocksFilled();
+	
+	sameSymbolInWinningCombo();
+	
+}
+
+function displayGameOver(){
+	if (isGameOver()){
+		console.log('gameover')
+	}
+}
+
 function init(){
 	displayModalAndSetUserSymbol();
 	clickBoxToMark();
@@ -82,15 +184,7 @@ init();
 // make a way to represent the board so that you can figure out a way for the computer to pick the right option (numbered ids)
 // depending on user symbol, mark each clicked box with user's symbol
 
-
-// randomly decide who goes first
-// but start with user going first
-// then do computer going first
-// then do random going first
-
 // computer needs to know when game is over
-
-// computer needs to know whether it lost, it won, or a draw
 
 // function checkIfGameOver()
 // check for if any of these number combinations are the same symbol
@@ -99,6 +193,18 @@ init();
 
 // as i click boxes, append to an array, userArray
 // have a computerArray too?
+
+// randomly decide who goes first
+// but start with user going first
+// then do computer going first
+// then do random going first
+
+
+// computer needs to know whether it lost, it won, or a draw
+
+
+
+
 
 // have an array in order of numbers by best move.
 // iterate through it.
@@ -112,25 +218,3 @@ init();
 // if I choose corner ...
 
 // have a function that makes sure to only consider vacant squares
-
-// have an obj
-// ehh maybe not
-// var numberNameObj = {
-// 	center: [5],
-// 	edge: [2,4,6,8],
-// 	corner: [1,3,7,9]
-// }
-
-// have a function that takes in a number and returns what type of square it is
-// center, edge, or corner
-
-// utilize that function to make the if statements more concise
-
-// if move() === 'edge' ... etc
-
-
-
-// center is 5
-// edge is even
-// corner is odd and not 5
-

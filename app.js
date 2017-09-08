@@ -89,11 +89,14 @@ function clickBoxToMark(){
 			var index = parseInt(e.target.dataset.num);
 			updateArraysOfSymbols(symbol, index);
 
-			setTimeout(function(){
-				displayGameOver();
-				computerMove();
-				displayGameOver();
-			}, 500);
+			displayGameOver();
+			
+			if (!isGameOver()){
+				setTimeout(function(){
+					computerMove();
+					displayGameOver();
+				}, 500);
+			}
 
 		}
 	});

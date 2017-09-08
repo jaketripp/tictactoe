@@ -78,16 +78,22 @@ function reset(){
 
 function clickBoxToMark(){
 	$('td').on('click', function(e){
-		$(this).text(userSymbol);
-		$(this).addClass(userSymbol);
+		if ($(this).text() === ''){
+			$(this).text(userSymbol);
+			$(this).addClass(userSymbol);
 
-		// 'X' or 'O'
-		var symbol = e.target.innerText;
-		// index of block (1-9)
-		var index = parseInt(e.target.dataset.num);
-		updateArraysOfSymbols(symbol, index);
+			// 'X' or 'O'
+			var symbol = e.target.innerText;
+			// index of block (1-9)
+			var index = parseInt(e.target.dataset.num);
+			updateArraysOfSymbols(symbol, index);
 
-		displayGameOver();
+			setTimeout(function(){
+				computerMove();
+				displayGameOver();
+			}, 500);
+
+		}
 	});
 }
 
@@ -125,6 +131,33 @@ function updateArraysOfSymbols(symbol, index){
 
 }
 
+// almost working
+// do it after every time user makes a move
+// also run to see if 
+function computerMove(){
+	var randomIndex = getRandomInt(1, emptyIndices.length-1);
+	var randomBlock = emptyIndices[randomIndex];
+	$('[data-num="' + randomBlock + '"]').addClass(computerSymbol);
+	$('[data-num="' + randomBlock + '"]').text(computerSymbol);
+	
+	updateArraysOfSymbols(computerSymbol, randomBlock);
+}
+
+// takes in index, returns block type (edge, corner, or corner)
+
+// utilize that function to make the if statements more concise
+
+// if move() === 'edge' ... etc
+
+function indexToBlockType(index){
+	if (index % 2 === 0) {
+		return 'edge';
+	} else if (index === 5) {
+		return 'center';
+	} else {
+		return 'corner';
+	}
+}
 
 function sameSymbolInWinningCombo(){
 
@@ -157,24 +190,8 @@ function sameSymbolInWinningCombo(){
 	return false;
 }
 
-// takes in index, returns block type (edge, corner, or corner)
-
-// utilize that function to make the if statements more concise
-
-// if move() === 'edge' ... etc
-
-function indexToBlockType(index){
-	if (index % 2 === 0) {
-		return 'edge';
-	} else if (index === 5) {
-		return 'center';
-	} else {
-		return 'corner';
-	}
-}
-
 function isGameOver(){
-	return allBlocksFilled() || sameSymbolInWinningCombo();
+	return  sameSymbolInWinningCombo() || allBlocksFilled();
 }
 
 function displayGameOver(){
@@ -242,3 +259,11 @@ init();
 // have an array in order of numbers by best move.
 // iterate through it.
 // if number is already used, go to the next one?
+
+// make it so that the first modal can't be closed
+
+// why is the second modal janky only the first time?
+
+// first make a function that picks a random tile from the remaining empty tiles and marks it properly
+
+// then the last thing to do is implement the strategy so the computer tries to win

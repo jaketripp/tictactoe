@@ -39,6 +39,7 @@ function doesUserGoFirst(){
 function setUserSymbol(){
 	$('#setSymbol')
 		.modal({
+			closable: false,
 			blurring: true,
 			inverted: true,
 			onApprove: function(){
@@ -89,6 +90,7 @@ function clickBoxToMark(){
 			updateArraysOfSymbols(symbol, index);
 
 			setTimeout(function(){
+				displayGameOver();
 				computerMove();
 				displayGameOver();
 			}, 500);

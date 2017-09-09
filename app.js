@@ -9,7 +9,11 @@ var indicesOfXs = [];
 var indicesOfOs = [];
 var emptyIndices = [1,2,3,4,5,6,7,8,9];
 
+var winningCombos = [[1,2,3],[4,5,6],[7,8,9],[1,4,7],[2,5,8],[3,6,9],[1,5,9],[3,5,7]];
+var filteredWinningCombos;
+var movesRanked = [1,3,7,9,5,2,4,6,8];
 var result = 'TIE!';
+
 
 // ===================
 // AUXILIARY FUNCTIONS
@@ -136,37 +140,92 @@ function updateArraysOfSymbols(symbol, index){
 
 }
 
-// almost working
-// do it after every time user makes a move
-// also run to see if 
+
+
+
 function computerMove(){
-	var randomIndex = getRandomInt(1, emptyIndices.length-1);
-	var randomBlock = emptyIndices[randomIndex];
-	$('[data-num="' + randomBlock + '"]').addClass(computerSymbol);
-	$('[data-num="' + randomBlock + '"]').text(computerSymbol);
-	
-	updateArraysOfSymbols(computerSymbol, randomBlock);
-}
+	var computerSpaces = computerSymbol === 'X' ? indicesOfXs : indicesOfOs;
+	var userSpaces = userSymbol === 'O' ? indicesOfOs : indicesOfXs;
 
-// takes in index, returns block type (edge, corner, or corner)
+	// check if any move will be a win or prevent a loss
+	for (var i = 0; i < emptyIndices.length; i++){
 
-// utilize that function to make the if statements more concise
 
-// if move() === 'edge' ... etc
+		// close but not working because it thinks that the user won even if the computer blocked it
+		var index = emptyIndices[i];
+		computerSpaces.push(index);
+		if (isGameOver()){
+			computerSpaces.pop();
+			$('[data-num="' + index + '"]').addClass(computerSymbol);
+			$('[data-num="' + index + '"]').text(computerSymbol);
+			updateArraysOfSymbols(computerSymbol, index);
+			return;
+		}
+		computerSpaces.pop();
+		userSpaces.push(index);
+		if (isGameOver()){
+			userSpaces.pop();
+			$('[data-num="' + index + '"]').addClass(computerSymbol);
+			$('[data-num="' + index + '"]').text(computerSymbol);
+			updateArraysOfSymbols(computerSymbol, index);
+			return;
+		}
+		userSpaces.pop();
 
-function indexToBlockType(index){
-	if (index % 2 === 0) {
-		return 'edge';
-	} else if (index === 5) {
-		return 'center';
-	} else {
-		return 'corner';
 	}
+	// find all possible win combinations where computer has 2 of 3 (even if user occupies the other 1)
+	filteredWinningCombos = winningCombos.filter(function(combo){
+		var count = 0;
+		for (var i = 0; i < combo.length; i++){
+			if (computerSpaces.indexOf(combo[i]) !== -1) {
+				count++;
+			}
+		}
+		return count === 2;
+	});
+
+	// remove combos where user has occupied one 
+	filteredWinningCombos = filteredWinningCombos.filter(function(combo){
+		for (var i = 0; i < combo.length; i++){
+			if (userSpaces.indexOf(combo[i]) !== -1){
+				return false;
+			}
+		}
+		return true;
+	});
+
+	try {
+		var combo = filteredWinningCombos[0];
+		for (var i = 0; i < combo.length; i++){
+			if (computerSpaces.indexOf(combo[i]) === -1){
+				$('[data-num="' + combo[i] + '"]').addClass(computerSymbol);
+				$('[data-num="' + combo[i] + '"]').text(computerSymbol);
+				
+				updateArraysOfSymbols(computerSymbol, combo[i]);
+
+				displayGameOver();
+				return;
+			}
+		}
+	} catch(e){
+
+		for (var i = 0; i < movesRanked.length; i++){
+			if (emptyIndices.indexOf(movesRanked[i]) !== -1){
+				$('[data-num="' + movesRanked[i] + '"]').addClass(computerSymbol);
+				$('[data-num="' + movesRanked[i] + '"]').text(computerSymbol);
+				
+				updateArraysOfSymbols(computerSymbol, movesRanked[i]);
+
+				displayGameOver();
+				return;
+			}
+		}
+	}
+
+		
 }
 
 function sameSymbolInWinningCombo(){
-
-	var winningCombos = [[1,2,3],[4,5,6],[7,8,9],[1,4,7],[2,5,8],[3,6,9],[1,5,9],[3,5,7]];
 
 	for (var i = 0; i < winningCombos.length; i++){
 		
@@ -194,6 +253,68 @@ function sameSymbolInWinningCombo(){
 	}
 	return false;
 }
+
+// function minimax(emptySpaces, symbol){
+
+// 	var score = 0;
+// 	for (var i = 0; i < emptySpaces.length; i++){
+// 		updateArraysOfSymbols(symbol, emptySpaces[i]);
+// 		if (isGameOver() && result === (symbol + ' wins!'){
+// 			score += 10;
+// 		}
+// 	}
+
+// }
+
+// function score(){
+// 	if (isGameOver()){
+// 		if (result === (computerSymbol + ' wins!'){
+// 			return 10;
+// 		} else {
+// 			return -10;
+// 		}
+// 	} else {
+// 		return 0;
+// 	}
+// }
+
+// trying to get computer to win
+// go through the empty places on the board
+// pick one, is game over and computer won?
+// score += 10
+// did user win?
+// score -= 10
+
+// if game not over, 
+	// score += minimax(board.slice(), symbol)
+
+// function fillField(input, player) {
+
+//     player = player === "X" ? "O" : "X";
+//     var score = 0;
+//     input = emptyIndices.slice();
+
+//     for (var i = 0; i < 9; i++) {
+//       if (input.indexOf(i) !== -1) {
+//           input[i] = player;
+//           if (checkWin(player, input) && player == "X") {
+//               score -= 10;
+//               continue;
+//             }
+//           if (checkWin(player, input) && player == "O") {
+//               score += 10;
+//               continue;
+//             }
+//           if (player == "X") {
+//                 score += fillField(input.slice(0,9),"X");
+//             } else {
+//                 score += fillField(input.slice(0,9),"O");
+//             }
+//           input[i] = 0;
+//       }
+//     }
+//     return score;
+// }
 
 function isGameOver(){
 	return  sameSymbolInWinningCombo() || allBlocksFilled();
@@ -272,3 +393,64 @@ init();
 // first make a function that picks a random tile from the remaining empty tiles and marks it properly
 
 // then the last thing to do is implement the strategy so the computer tries to win
+
+
+
+// minimax algorithm
+// weights a win for you as 10
+// weights a win for your opponent as -10
+// weights each level of the tree as the number (level 1 is 1, level 2 is 2)
+
+// 10 - depth
+// you winning on level 2 is weighted 10 - 2 = 8
+// winning on level 1 is better, so weighted at 10 - 1 = 9
+
+// depth - 10
+// opponent winning on level 2 is weighted -10 + 2 = -8
+// opponent winning on level 1 is better, so weighted at -10 + 1 = -9
+
+
+// 0 for tie
+
+// a way to make your AI slightly beatable is cut down the number of levels it can look (you're going to be using a for loop i think)
+// so instead of being able to look all the way and see all the possibilities, only see like 2 levels
+
+
+// keep a list of possible moves (emptyIndices)
+// for each, append to an object (index: score)
+// check if any of them end the game with you (the computer) winning, if they do them give them 10-depth score
+// pick that move, if not, run minimax again
+
+
+// check each move, if game is over, return the score (win, tie, or loss)
+// if game is not over, recursively check again, keep diving deeper until game is over
+
+// alpha beta algorithm is you go 2 levels deep, see what the value that bubbles up is
+// if the next branch is less than the bubbled up value, skip (return?)
+
+// max first
+// min		
+// 		   /\
+//    <= 2    <= 1	
+// 	   /\      /\
+//    2  7    1  8
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

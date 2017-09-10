@@ -127,6 +127,7 @@ function updateArraysOfSymbols(symbol, index){
 	}
 }
 
+
 // AI FUNCTIONS
 
 // returns possible winning combinations
@@ -168,8 +169,7 @@ function computerMove(){
 		computerSpaces.push(index);
 		if (isGameOver()){
 			computerSpaces.pop();
-			$('[data-num="' + index + '"]').addClass(computerSymbol);
-			$('[data-num="' + index + '"]').text(computerSymbol);
+			updateDOM(computerSymbol, index)
 			updateArraysOfSymbols(computerSymbol, index);
 			return;
 		}
@@ -178,13 +178,11 @@ function computerMove(){
 		userSpaces.push(index);
 		if (isGameOver()){
 			userSpaces.pop();
-			$('[data-num="' + index + '"]').addClass(computerSymbol);
-			$('[data-num="' + index + '"]').text(computerSymbol);
+			updateDOM(computerSymbol, index)
 			updateArraysOfSymbols(computerSymbol, index);
 			return;
 		}
 		userSpaces.pop();
-
 	}
 
 	try {
@@ -192,31 +190,37 @@ function computerMove(){
 
 		for (var i = 0; i < combo.length; i++){
 			if (computerSpaces.indexOf(combo[i]) === -1){
-				handlePickedMove(combo, i);
+				updatePickedMove(combo, i);
 				return;
 			}
 		}
+		
 	} catch(e){
 
 		for (var i = 0; i < movesRanked.length; i++){
 			if (emptyIndices.indexOf(movesRanked[i]) !== -1){
-				handlePickedMove(movesRanked, i);
+				updatePickedMove(movesRanked, i);
 				return;
 			}
 		}
 	}		
 }
 
-function handlePickedMove(moves, i){
-	$('[data-num="' + moves[i] + '"]').addClass(computerSymbol);
-	$('[data-num="' + moves[i] + '"]').text(computerSymbol);
-	
+// update DOM after computer picks a move
+function updateDOM(symbol, index){
+	$('[data-num="' + index + '"]').addClass(symbol);
+	$('[data-num="' + index + '"]').text(symbol);
+}
+
+// update DOM, correct symbols array, and display game over(if it's over)
+function updatePickedMove(moves, i){
+	updateDOM(computerSymbol, moves[i])
 	updateArraysOfSymbols(computerSymbol, moves[i]);
 	displayGameOver();
 }
 
-// GAME OVER FUNCTIONS
 
+// GAME OVER FUNCTIONS
 function checkBothSidesForWinningCombo(){
 	sameSymbolInWinningCombo(indicesOfXs, 'X');
 	sameSymbolInWinningCombo(indicesOfOs, 'O');

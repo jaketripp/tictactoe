@@ -11,27 +11,27 @@ var emptyIndices = [1,2,3,4,5,6,7,8,9];
 
 var winningCombos = [[1,2,3],[4,5,6],[7,8,9],[1,4,7],[2,5,8],[3,6,9],[1,5,9],[3,5,7]];
 var filteredWinningCombos;
+
 // corners, center, then edges
 var movesRanked = [1,3,7,9,5,2,4,6,8];
 var result = 'TIE!';
-
 
 // ===================
 // AUXILIARY FUNCTIONS
 // ===================
 
-// [min,max]
+// [min,max] exclusive
 function getRandomInt(min, max) {
 	min = Math.ceil(min);
 	max = Math.floor(max);
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-
 // ==============
 // MAIN FUNCTIONS
 // ==============
 
+// returns boolean of whether user goes first
 function doesUserGoFirst(){
 	var whoGoesFirstKey = {
 		1: 'User',
@@ -41,6 +41,7 @@ function doesUserGoFirst(){
 	return whoGoesFirstKey[random] === 'User';
 }
 
+// modal to set userSymbol and computerSymbol
 function setUserSymbol(){
 	$('#setSymbol')
 		.modal({
@@ -50,22 +51,21 @@ function setUserSymbol(){
 			onApprove: function(){
 				userSymbol = 'O';
 				computerSymbol = 'X';
-				if (!doesUserGoFirst()){
-					computerMove();
-				}
 			},
 			onDeny: function(){
 				userSymbol = 'X';
 				computerSymbol = 'O';
+			},
+			onHide: function(){
 				if (!doesUserGoFirst()){
 					computerMove();
 				}
-
-			}        
+			}      
 		})
 		.modal('show');
 }
 
+// modal for game results
 function resultModal(){
 	$('#result .header').text(result);
 	$('#result')
@@ -114,19 +114,6 @@ function clickBoxToMark(){
 	});
 }
 
-function allBlocksFilled(){
-	for (var i = 1; i <= 9; i++){
-		if ($('[data-num="' + i + '"]').text() === ''){
-			return false;
-		}
-	}
-	return true;
-}
-
-// takes in a number and a symbol
-// if symbol is 'X', appends number to indicesOfXs
-// else if symbol is 'O', appends number to indicesOfOs
-// removes index from emptyIndices
 function updateArraysOfSymbols(symbol, index){
 
 	var position = emptyIndices.indexOf(index);
@@ -138,16 +125,9 @@ function updateArraysOfSymbols(symbol, index){
 	if (symbol === 'O') {
 		indicesOfOs.push(index);
 	}
-
-	// console.log('x array');
-	// console.log(indicesOfXs);
-	// console.log('o array');
-	// console.log(indicesOfOs);
-	// console.log('empty spaces array');
-	// console.log(emptyIndices);
-
 }
 
+// AI FUNCTIONS
 
 // returns possible winning combinations
 function filterWinningCombos(){
@@ -183,7 +163,6 @@ function computerMove(){
 	// check if any move will be a win or prevent a loss
 	for (var i = 0; i < emptyIndices.length; i++){
 
-		// close but not working because it thinks that the user won even if the computer blocked it
 		var index = emptyIndices[i];
 
 		computerSpaces.push(index);
@@ -228,46 +207,54 @@ function computerMove(){
 	}		
 }
 
-function handlePickedMove(goodMoves, i){
-	$('[data-num="' + goodMoves[i] + '"]').addClass(computerSymbol);
-	$('[data-num="' + goodMoves[i] + '"]').text(computerSymbol);
+function handlePickedMove(moves, i){
+	$('[data-num="' + moves[i] + '"]').addClass(computerSymbol);
+	$('[data-num="' + moves[i] + '"]').text(computerSymbol);
 	
-	updateArraysOfSymbols(computerSymbol, goodMoves[i]);
+	updateArraysOfSymbols(computerSymbol, moves[i]);
 	displayGameOver();
 }
 
+// GAME OVER FUNCTIONS
 
-function sameSymbolInWinningCombo(){
+function checkBothSidesForWinningCombo(){
+	sameSymbolInWinningCombo(indicesOfXs, 'X');
+	sameSymbolInWinningCombo(indicesOfOs, 'O');
 
-	for (var i = 0; i < winningCombos.length; i++){
-		
-		var Xcount = 0;
-		var Ocount = 0;
+	return sameSymbolInWinningCombo(indicesOfXs, 'X') || sameSymbolInWinningCombo(indicesOfOs, 'O');
+}
 
-		for (var j = 0; j < winningCombos[i].length; j++){
-			// if the other two symbols in the array are the same, return true
-			if (indicesOfXs.indexOf(winningCombos[i][j]) !== -1){
-				Xcount++;
-			}
-			if (indicesOfOs.indexOf(winningCombos[i][j]) !== -1){
-				Ocount++;
+function sameSymbolInWinningCombo(pastMoves, symbol){
+
+	var filteredWinningCombos = winningCombos.filter(function(combo){
+		var count = 0;
+		for (var i = 0; i < combo.length; i++){
+			if (pastMoves.indexOf(combo[i]) !== -1){
+				count++;
 			}
 		}
 
-		if (Xcount === 3){
-			result = 'X wins!';
+		if (count === 3){
+			result = symbol + ' wins!';
 			return true;
 		}
-		if (Ocount === 3){
-			result = 'O wins!';
-			return true;
+	})
+	// at least one winning combo on one side
+	return filteredWinningCombos.length > 0;
+}
+
+// checks if all blocks filled
+function allBlocksFilled(){
+	for (var i = 1; i <= 9; i++){
+		if ($('[data-num="' + i + '"]').text() === ''){
+			return false;
 		}
 	}
-	return false;
+	return true;
 }
 
 function isGameOver(){
-	return  sameSymbolInWinningCombo() || allBlocksFilled();
+	return  checkBothSidesForWinningCombo() || allBlocksFilled();
 }
 
 function displayGameOver(){
@@ -276,6 +263,7 @@ function displayGameOver(){
 		$('#result').modal('show');
 	}
 }
+
 
 function init(){
 	setUserSymbol();
@@ -290,9 +278,6 @@ init();
 // fix it so that it says tie when you tie
 
 // refactor
-
-// then the last thing to do is implement the strategy so the computer tries to win
-
 
 
 // minimax algorithm

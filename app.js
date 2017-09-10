@@ -141,38 +141,9 @@ function updateArraysOfSymbols(symbol, index){
 }
 
 
+// returns possible winning combinations
+function filterWinningCombos(){
 
-
-function computerMove(){
-	var computerSpaces = computerSymbol === 'X' ? indicesOfXs : indicesOfOs;
-	var userSpaces = userSymbol === 'O' ? indicesOfOs : indicesOfXs;
-
-	// check if any move will be a win or prevent a loss
-	for (var i = 0; i < emptyIndices.length; i++){
-
-
-		// close but not working because it thinks that the user won even if the computer blocked it
-		var index = emptyIndices[i];
-		computerSpaces.push(index);
-		if (isGameOver()){
-			computerSpaces.pop();
-			$('[data-num="' + index + '"]').addClass(computerSymbol);
-			$('[data-num="' + index + '"]').text(computerSymbol);
-			updateArraysOfSymbols(computerSymbol, index);
-			return;
-		}
-		computerSpaces.pop();
-		userSpaces.push(index);
-		if (isGameOver()){
-			userSpaces.pop();
-			$('[data-num="' + index + '"]').addClass(computerSymbol);
-			$('[data-num="' + index + '"]').text(computerSymbol);
-			updateArraysOfSymbols(computerSymbol, index);
-			return;
-		}
-		userSpaces.pop();
-
-	}
 	// find all possible win combinations where computer has 2 of 3 (even if user occupies the other 1)
 	filteredWinningCombos = winningCombos.filter(function(combo){
 		var count = 0;
@@ -193,17 +164,48 @@ function computerMove(){
 		}
 		return true;
 	});
+	
+	return filteredWinningCombos[0];
+}
+
+function computerMove(){
+	var computerSpaces = computerSymbol === 'X' ? indicesOfXs : indicesOfOs;
+	var userSpaces = userSymbol === 'O' ? indicesOfOs : indicesOfXs;
+
+	// check if any move will be a win or prevent a loss
+	for (var i = 0; i < emptyIndices.length; i++){
+
+		// close but not working because it thinks that the user won even if the computer blocked it
+		var index = emptyIndices[i];
+
+		computerSpaces.push(index);
+		if (isGameOver()){
+			computerSpaces.pop();
+			$('[data-num="' + index + '"]').addClass(computerSymbol);
+			$('[data-num="' + index + '"]').text(computerSymbol);
+			updateArraysOfSymbols(computerSymbol, index);
+			return;
+		}
+		computerSpaces.pop();
+
+		userSpaces.push(index);
+		if (isGameOver()){
+			userSpaces.pop();
+			$('[data-num="' + index + '"]').addClass(computerSymbol);
+			$('[data-num="' + index + '"]').text(computerSymbol);
+			updateArraysOfSymbols(computerSymbol, index);
+			return;
+		}
+		userSpaces.pop();
+
+	}
 
 	try {
-		var combo = filteredWinningCombos[0];
+		var combo = filterWinningCombos();
+
 		for (var i = 0; i < combo.length; i++){
 			if (computerSpaces.indexOf(combo[i]) === -1){
-				$('[data-num="' + combo[i] + '"]').addClass(computerSymbol);
-				$('[data-num="' + combo[i] + '"]').text(computerSymbol);
-				
-				updateArraysOfSymbols(computerSymbol, combo[i]);
-
-				displayGameOver();
+				handlePickedMove(combo, i);
 				return;
 			}
 		}
@@ -211,19 +213,21 @@ function computerMove(){
 
 		for (var i = 0; i < movesRanked.length; i++){
 			if (emptyIndices.indexOf(movesRanked[i]) !== -1){
-				$('[data-num="' + movesRanked[i] + '"]').addClass(computerSymbol);
-				$('[data-num="' + movesRanked[i] + '"]').text(computerSymbol);
-				
-				updateArraysOfSymbols(computerSymbol, movesRanked[i]);
-
-				displayGameOver();
+				handlePickedMove(movesRanked, i);
 				return;
 			}
 		}
-	}
-
-		
+	}		
 }
+
+function handlePickedMove(goodMoves, i){
+	$('[data-num="' + goodMoves[i] + '"]').addClass(computerSymbol);
+	$('[data-num="' + goodMoves[i] + '"]').text(computerSymbol);
+	
+	updateArraysOfSymbols(computerSymbol, goodMoves[i]);
+	displayGameOver();
+}
+
 
 function sameSymbolInWinningCombo(){
 

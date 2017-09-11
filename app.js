@@ -67,7 +67,16 @@ function setUserSymbol(){
 
 // modal for game results
 function resultModal(){
+	var color;
+	if (result === 'X wins!'){
+		color = '#54C8FF';
+	} else if (result === 'O wins!') {
+		color = '#22be34';
+	} else {
+		color = 'black';
+	}
 	$('#result .header').text(result);
+	$('#result .header').css('color', color);
 	$('#result')
 		.modal({
 			inverted: true,

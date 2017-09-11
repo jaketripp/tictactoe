@@ -14,7 +14,7 @@ var filteredWinningCombos;
 
 // corners, center, then edges
 var movesRanked = [1,3,7,9,5,2,4,6,8];
-var result = 'TIE!';
+var result = 'Tie!';
 
 // ===================
 // AUXILIARY FUNCTIONS
@@ -157,6 +157,19 @@ function filterWinningCombos(){
 	return filteredWinningCombos[0];
 }
 
+function checkForPotentialFinalMove(pastMoves, index){
+	pastMoves.push(index);
+	if (isGameOver()){
+		pastMoves.pop();
+		updateDOM(computerSymbol, index)
+		updateArraysOfSymbols(computerSymbol, index);
+		return true;
+	} else {
+		pastMoves.pop();
+		return false;
+	}
+}
+
 function computerMove(){
 	var computerSpaces = computerSymbol === 'X' ? indicesOfXs : indicesOfOs;
 	var userSpaces = userSymbol === 'O' ? indicesOfOs : indicesOfXs;
@@ -166,26 +179,18 @@ function computerMove(){
 
 		var index = emptyIndices[i];
 
-		computerSpaces.push(index);
-		if (isGameOver()){
-			computerSpaces.pop();
-			updateDOM(computerSymbol, index)
-			updateArraysOfSymbols(computerSymbol, index);
+		// check if computer has a final move, take it and win
+		if (checkForPotentialFinalMove(computerSpaces, index)){
 			return;
 		}
-		computerSpaces.pop();
-
-		userSpaces.push(index);
-		if (isGameOver()){
-			userSpaces.pop();
-			updateDOM(computerSymbol, index)
-			updateArraysOfSymbols(computerSymbol, index);
+		// check if user has a final move, take it to prevent a loss
+		if (checkForPotentialFinalMove(userSpaces, index)){
 			return;
 		}
-		userSpaces.pop();
 	}
 
 	try {
+		// if computer has 2 of 3, pick remaining move
 		var combo = filterWinningCombos();
 
 		for (var i = 0; i < combo.length; i++){
@@ -194,9 +199,9 @@ function computerMove(){
 				return;
 			}
 		}
-		
-	} catch(e){
 
+	} catch(e){
+		// if not, pick the first available option from the movesRanked array
 		for (var i = 0; i < movesRanked.length; i++){
 			if (emptyIndices.indexOf(movesRanked[i]) !== -1){
 				updatePickedMove(movesRanked, i);
@@ -241,8 +246,12 @@ function sameSymbolInWinningCombo(pastMoves, symbol){
 		if (count === 3){
 			result = symbol + ' wins!';
 			return true;
-		}
+		} 
 	})
+	// fix bug so that it correctly calls it a tie 
+	if (filteredWinningCombos.length === 0){
+		result = 'Tie!';
+	}
 	// at least one winning combo on one side
 	return filteredWinningCombos.length > 0;
 }
@@ -278,8 +287,6 @@ init();
 
 
 // why is the second modal janky only the first time?
-
-// fix it so that it says tie when you tie
 
 // refactor
 

@@ -94,6 +94,8 @@ function clickBoxToMark(){
 		if ($(this).text() === ''){
 			$(this).text(userSymbol);
 			$(this).addClass(userSymbol);
+			$(this).css('backgroundColor', 'white');
+			$(this).css('opacity', '1.0');
 
 			// 'X' or 'O'
 			var symbol = e.target.innerText;
@@ -112,6 +114,20 @@ function clickBoxToMark(){
 
 		}
 	});
+}
+
+function changeBackgroundOnHover(){
+	$('td').on('mouseenter', function(e){
+		if ($(this).text() === ''){
+			var color = (userSymbol === 'X') ? '#54C8FF' : '#22be34';
+			$(this).css('backgroundColor', color);
+			$(this).css('opacity', '0.6');
+		}
+	})
+	$('td').on('mouseleave', function(e){
+		$(this).css('backgroundColor', 'white');
+		$(this).css('opacity', '1.0');
+	})
 }
 
 function updateArraysOfSymbols(symbol, index){
@@ -280,6 +296,7 @@ function displayGameOver(){
 
 function init(){
 	setUserSymbol();
+	changeBackgroundOnHover()
 	clickBoxToMark();
 }
 

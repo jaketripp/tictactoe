@@ -139,6 +139,12 @@ function changeBackgroundOnHover(){
 	})
 }
 
+function closeModalOnClick(){
+	$('#result').on('click', function(e){
+		$('#result').modal('hide');
+	})
+}
+
 function updateArraysOfSymbols(symbol, index){
 
 	var position = emptyIndices.indexOf(index);
@@ -305,7 +311,8 @@ function displayGameOver(){
 
 function init(){
 	setUserSymbol();
-	changeBackgroundOnHover()
+	changeBackgroundOnHover();
+	closeModalOnClick();
 	clickBoxToMark();
 }
 
